@@ -128,8 +128,8 @@ def run_demo_step(toolchain,target,profile,dryrun,multi):
     #use only the tens digit (e.g. 9 instead of 3.9)
     
     if multi is True:
-        #Multi-Device
-        cmd_fota = ["manifest-tool", "update", "prepare", "-p", payload, "--fw-version", fw_minor_digit, "--no-cleanup"] 
+        #Multi-Device - this requires manually creating update campaign in the pelion portal based on a filter
+        cmd_fota = ["manifest-tool", "update", "prepare", "-p", payload] 
     else:
         #Single-Device
         cmd_fota = ["manifest-tool", "update", "device", "-p", payload, "-D", device_id, "--fw-version", fw_minor_digit, "--no-cleanup"]
