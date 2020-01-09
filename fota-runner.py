@@ -65,18 +65,22 @@ def run_demo_step(toolchain,target,profile,dryrun,multi):
     new_fw_version = float(fw_version)
     new_fw_version = round(new_fw_version,1)
 
-    #increase version
+    #increase version - 
+    #todo - fix this so that it is not decimal based (only 10 possible minor versions per major version!)
     new_fw_version = new_fw_version + 0.1            
     
     #round again to remove weird conversion problems
     new_fw_version = round(new_fw_version,1)
 
-    fw_major_digit = str(int((float(new_fw_version)/1)))
-    fw_minor_digit = str(int((float(new_fw_version)%1)*10))
-    fw_patch_digit = "0"
-    print("fw major digit = " + fw_major_digit)    
-    print("fw minor digit = " + fw_minor_digit)    
-    print("fw patch digit = " + fw_patch_digit)    
+    fw_major_digit = int((float(new_fw_version)/1))
+    fw_minor_digit = int(round(float(new_fw_version)%1,1)*10)
+    
+    fw_major_digit_str = str(fw_major_digit)
+    fw_minor_digit_str = str(fw_minor_digit)
+    fw_patch_digit_str = "0"
+    print("new fw major digit = " + fw_major_digit_str)    
+    print("new fw minor digit = " + fw_minor_digit_str)    
+    print("new fw patch digit = " + fw_patch_digit_str)    
     
     #convert back to string
     new_fw_version = str(new_fw_version)
@@ -105,9 +109,9 @@ def run_demo_step(toolchain,target,profile,dryrun,multi):
         f.write("#ifndef __APP_VERSION_H__\n")
         f.write("#define __APP_VERSION_H__\n")
         f.write("\n")
-        f.write("#define APP_VERSION_MAJOR " + fw_major_digit + "\n")    
-        f.write("#define APP_VERSION_MINOR " + fw_minor_digit + "\n")
-        f.write("#define APP_VERSION_PATCH " + fw_patch_digit + "\n") 
+        f.write("#define APP_VERSION_MAJOR " + fw_major_digit_str + "\n")    
+        f.write("#define APP_VERSION_MINOR " + fw_minor_digit_str + "\n")
+        f.write("#define APP_VERSION_PATCH " + fw_patch_digit_str + "\n") 
         f.write("\n")
         f.write("#endif\n")
         f.close()  
@@ -123,16 +127,21 @@ def run_demo_step(toolchain,target,profile,dryrun,multi):
     #FOTA    
     print("3 - Start Firmware Update Campaign")
  
-    #todo - handle passing firwmare version correctly (uses only first digital after decimal?)
+    # the firmware version that needs to be passed to the custom manifest-tool 
+    # is a 64 bit unsigned integer, where 32 MSBs represent the major version 
+    # and 32 LSBs represent the minor.
+    # For example, version 1.0 represented as 0x0000000100000000 and version 1.1 as 0x0000000100000001.
+    # —fw-version accepts only decimal values, so you need to convert the above values 
+    # to decimals: E.g. If you would like to upgrade to version 1.1 you need to type —fw-version 4294967297.
     
-    #use only the tens digit (e.g. 9 instead of 3.9)
+    fw_ver_encoded_str = str((fw_major_digit*4294967296) + fw_minor_digit)
     
     if multi is True:
         #Multi-Device - this requires manually creating update campaign in the pelion portal based on a filter
         cmd_fota = ["manifest-tool", "update", "prepare", "-p", payload] 
     else:
         #Single-Device
-        cmd_fota = ["manifest-tool", "update", "device", "-p", payload, "-D", device_id, "--fw-version", fw_minor_digit, "--no-cleanup"]
+        cmd_fota = ["manifest-tool", "update", "device", "-p", payload, "-D", device_id, "--fw-version", fw_ver_encoded_str, "--no-cleanup"]
 
     print("EXEC: %s" % ' '.join(cmd_fota))
     if dryrun is not True:
