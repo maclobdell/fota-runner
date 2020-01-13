@@ -137,7 +137,7 @@ def run_demo_step(toolchain,target,profile,dryrun,multi):
     
     if multi is True:
         #Multi-Device - this requires manually creating update campaign in the pelion portal based on a filter
-        cmd_fota = ["manifest-tool", "update", "prepare", "-p", payload] 
+        cmd_fota = ["manifest-tool", "update", "prepare", "-p", payload, "--fw-version", fw_ver_encoded_str] 
     else:
         #Single-Device
         cmd_fota = ["manifest-tool", "update", "device", "-p", payload, "-D", device_id, "--fw-version", fw_ver_encoded_str, "--no-cleanup"]
