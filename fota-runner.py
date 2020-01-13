@@ -19,7 +19,6 @@
 #       - mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_064S2_4343W/secure_image_parameters.json
 #   2. compile the application
 #   3. start an update campaign on single device
-#   4. checks completion (Not yet)
 
 import argparse
 import subprocess
@@ -45,8 +44,8 @@ def run_demo_step(toolchain,target,profile,dryrun,multi):
     
     #todo - put this data into a separate configuration file
     parameters_file = "mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_064S2_4343W/secure_image_parameters.json"
-    payload = "C:/pelion-psoc64/BUILD/CY8CKIT_064S2_4343W/ARM-RELEASE/pelion-psoc64_upgrade_signed.bin" 
-    device_id = "016ef6f219fe00000000000100174596"
+    payload = "C:/<path to pelion-psoc64 project>/BUILD/CY8CKIT_064S2_4343W/ARM-RELEASE/pelion-psoc64_upgrade_signed.bin" 
+    device_id = "<replace with device id>"
     fw_version_file = "app_version.h" 
     
 #Up-Rev application        
