@@ -1,24 +1,7 @@
 #!/usr/bin/env python 
 
-# Pelion Device Management Demo - FOTA Helper
+# Pelion Device Management Demo - Firmware Update Helper
 #
-
-# Before running this script, make sure the following steps are completed
-#   - initialize manifest tool & generate update certificate
-#   - set Pelion API key 
-#   - set app keys
-#   - set wifi password
-#   - compile application
-#   - flash initial application, make sure it connects
-#   - enroll the device if necessary
-
-# Run this script from the top level of the Pelion example application
-
-# This script does the following
-#   1. modify verison in the file at  
-#       - mbed-os/targets/TARGET_Cypress/TARGET_PSOC6/TARGET_CY8CKIT_064S2_4343W/secure_image_parameters.json
-#   2. compile the application
-#   3. start an update campaign on single device
 
 import argparse
 import subprocess
